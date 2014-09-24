@@ -28,7 +28,7 @@ func NewApp(width, height int, title string, viewportFunc func(window *glfw.Wind
 	runtime.LockOSThread()
 
 	if !glfw.Init() {
-		panic("Can't init glfw!")
+		panic("can't init glfw!")
 	}
 
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
@@ -66,7 +66,7 @@ func (a App) Start() {
 	for !a.Window.ShouldClose() {
 		a.ViewportFunc(a.Window)
 
-		gl.ClearColor(0.2, 0.2, 0.2, 1)
+		gl.ClearColor(0.1, 0.1, 0.1, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		a.DrawFunc(a.Window)

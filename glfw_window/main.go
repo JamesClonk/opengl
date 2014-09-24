@@ -20,4 +20,5 @@ func main() {
 }
 
 func draw(window *glfw.Window) {
+	// nothing to draw here..
 }

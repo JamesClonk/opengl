@@ -12,7 +12,7 @@ func main() {
 	runtime.LockOSThread()
 
 	if !glfw.Init() {
-		panic("Can't init glfw!")
+		panic("can't init glfw!")
 	}
 	defer glfw.Terminate()
 

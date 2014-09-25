@@ -99,5 +99,5 @@ func OnMouseDown(window *glfw.Window, button glfw.MouseButton, action glfw.Actio
 }
 
 func OnMouseMove(window *glfw.Window, x, y float64) {
-	log.Printf("Mouse Position [%v, %v]\n", x, y)
+	log.Printf("Mouse Position [%.0f, %.0f]\n", x, y)
 }

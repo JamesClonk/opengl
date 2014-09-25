@@ -43,6 +43,11 @@ func NewApp(width, height int, title string, viewportFunc func(window *glfw.Wind
 	window.SetMouseButtonCallback(mouseFunc)
 	window.SetCursorPositionCallback(cursorFunc)
 
+	if gl.Init() != 0 {
+		panic("can't init glew!")
+	}
+	gl.GetError()
+
 	gl.Enable(gl.DEPTH_TEST)
 	gl.DepthFunc(gl.LESS)
 	gl.Enable(gl.BLEND)

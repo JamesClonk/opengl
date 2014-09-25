@@ -5,29 +5,46 @@ import (
 	gl "github.com/go-gl/gl"
 	glfw "github.com/go-gl/glfw3"
 	glh "github.com/go-gl/glh"
-	mathgl "github.com/go-gl/mathgl/mgl64"
 )
 
+var triangle Triangle
 var shader gl.Program
 var vertexShader, fragmentShader glh.Shader
+var vertexArray gl.VertexArray
+
+// const vertexShaderSource = `
+// 	#version 330
+// 		in vec2 position;
+// 		void main() {
+// 			gl_Position = vec4(position, 0, 1);
+// 		}
+// `
+
+// const fragmentShaderSource = `
+// 	#version 330
+// 		out vec4 colourOut;
+// 		void main() {
+// 			colourOut = vec4(0, 1.0, 0, 1.0);
+// 		}
+// `
 
 const vertexShaderSource = `
 	#version 120
 		attribute vec4 position;
-		void main(){
+		void main() {
 			gl_Position = position;
 		}
 `
 
 const fragmentShaderSource = `
 	#version 120
-		void main(){
-			gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+		void main() {
+			gl_FragColor = vec4(0.0, 1.0, 1.0, 1.0);
 		}
 `
 
 type Triangle struct {
-	Vertices []mathgl.Vec2
+	Vertices [6]float32
 }
 
 func main() {
@@ -36,28 +53,35 @@ func main() {
 
 	initOpenGL(app.Window)
 	app.Start()
+
+	glh.OpenGLSentinel()
 }
 
 func initOpenGL(window *glfw.Window) {
-	triangle := Triangle{}
+	// set triangle vertices
+	triangle.Vertices = [6]float32{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5}
 
-	triangle.Vertices = append(triangle.Vertices, mathgl.Vec2{-1, -5})
-	triangle.Vertices = append(triangle.Vertices, mathgl.Vec2{0, 1})
-	triangle.Vertices = append(triangle.Vertices, mathgl.Vec2{1, -5})
-
+	// create shader
 	vertexShader = glh.Shader{gl.VERTEX_SHADER, vertexShaderSource}
 	fragmentShader = glh.Shader{gl.FRAGMENT_SHADER, fragmentShaderSource}
 	shader = glh.NewProgram(vertexShader, fragmentShader)
 	shader.Use()
+
+	// create vertex array object
+	vertexArray = gl.GenVertexArray()
+	vertexArray.Bind()
+
+	// create vertex buffer object
+	triangleBuffer := gl.GenBuffer()
+	triangleBuffer.Bind(gl.ARRAY_BUFFER)
+	gl.BufferData(gl.ARRAY_BUFFER, int(glh.Sizeof(gl.FLOAT))*len(triangle.Vertices), &triangle.Vertices, gl.STATIC_DRAW)
+
+	// enable vertex attributes
+	positionLocation := shader.GetAttribLocation("position")
+	positionLocation.EnableArray()
+	positionLocation.AttribPointer(2, gl.FLOAT, false, 0, nil)
 }
 
 func draw(window *glfw.Window) {
-	// gl.Begin(gl.TRIANGLES)
-	// gl.Color3f(1, 0, 0)
-	// gl.Vertex3f(-1, 0, 0)
-	// gl.Color3f(0, 1, 0)
-	// gl.Vertex3f(0, 1, 0)
-	// gl.Color3f(0, 0, 1)
-	// gl.Vertex3f(1, 0, 0)
-	// gl.End()
+	gl.DrawArrays(gl.TRIANGLES, 0, 3)
 }

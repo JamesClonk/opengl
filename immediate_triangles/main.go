@@ -4,7 +4,7 @@ import (
 	"math"
 
 	. "github.com/JamesClonk/opengl/app"
-	gl "github.com/go-gl/gl"
+	"github.com/go-gl/gl"
 	glfw "github.com/go-gl/glfw3"
 )
 
@@ -35,7 +35,7 @@ func draw(window *glfw.Window) {
 	// transform orthogonal projection matrix
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	gl.Ortho(-float64(width)/float64(height), float64(width)/float64(height), -1, 2, 1, 1)
+	gl.Ortho(-float64(width)/float64(height), float64(width)/float64(height), -1, 2, -1.0, 1.0)
 
 	// transform modelview matrix
 	gl.MatrixMode(gl.MODELVIEW)

@@ -53,8 +53,6 @@ func main() {
 
 	initOpenGL(app.Window)
 	app.Start()
-
-	glh.OpenGLSentinel()
 }
 
 func initOpenGL(window *glfw.Window) {

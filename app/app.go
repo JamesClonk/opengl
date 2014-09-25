@@ -4,8 +4,9 @@ import (
 	"log"
 	"runtime"
 
-	gl "github.com/go-gl/gl"
+	"github.com/go-gl/gl"
 	glfw "github.com/go-gl/glfw3"
+	"github.com/go-gl/glh"
 )
 
 type App struct {
@@ -75,6 +76,7 @@ func (a App) Start() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		a.DrawFunc(a.Window)
+		glh.OpenGLSentinel()
 
 		a.Window.SwapBuffers()
 		glfw.PollEvents()
@@ -82,6 +84,7 @@ func (a App) Start() {
 }
 
 func (a App) Destroy() {
+	glh.OpenGLSentinel()
 	a.Window.Destroy()
 	glfw.Terminate()
 }

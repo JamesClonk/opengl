@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	//app := NewApp(640, 480, "Go GLFW3 Window & App Defaults Example", SetViewport, draw, OnKeyDown, OnMouseDown, OnMouseMove)
+	//app := NewApp(640, 480, "Go GLFW3 Window & App Defaults Example", SetViewport, draw, OnKeyDown, OnMouseDown, OnMouseMove, OnError)
 	app := NewSimpleApp(640, 480, "Go GLFW3 Window & App Defaults Example", draw)
 	defer app.Destroy()
 

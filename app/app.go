@@ -19,18 +19,20 @@ type App struct {
 	KeyFunc      func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey)
 	MouseFunc    func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey)
 	CursorFunc   func(*glfw.Window, float64, float64)
+	ErrorFunc    func(glfw.ErrorCode, string)
 }
 
 func NewSimpleApp(width, height int, title string, drawFunc func(*glfw.Window)) *App {
-	return NewApp(width, height, title, SetViewport, drawFunc, OnKeyDown, OnMouseDown, OnMouseMove)
+	return NewApp(width, height, title, SetViewport, drawFunc, OnKeyDown, OnMouseDown, OnMouseMove, OnError)
 }
 
-func NewApp(width, height int, title string, viewportFunc func(window *glfw.Window), drawFunc func(*glfw.Window), keyFunc func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey), mouseFunc func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey), cursorFunc func(*glfw.Window, float64, float64)) *App {
+func NewApp(width, height int, title string, viewportFunc func(window *glfw.Window), drawFunc func(*glfw.Window), keyFunc func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey), mouseFunc func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey), cursorFunc func(*glfw.Window, float64, float64), errorFunc func(glfw.ErrorCode, string)) *App {
 	runtime.LockOSThread()
 
 	if !glfw.Init() {
 		panic("can't init glfw!")
 	}
+	glfw.SetErrorCallback(errorFunc)
 
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	if err != nil {
@@ -108,4 +110,8 @@ func OnMouseDown(window *glfw.Window, button glfw.MouseButton, action glfw.Actio
 
 func OnMouseMove(window *glfw.Window, x, y float64) {
 	log.Printf("Mouse Position [%.0f, %.0f]\n", x, y)
+}
+
+func OnError(err glfw.ErrorCode, description string) {
+	log.Printf("%v: %v\n", err, description)
 }

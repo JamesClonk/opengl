@@ -1,4 +1,5 @@
-opengl
+OpenGL
 ======
 
-Learn me some OpenGL with Go
+Learn me some OpenGL with Go..
+

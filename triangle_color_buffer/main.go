@@ -4,10 +4,10 @@ import (
 	"unsafe"
 
 	. "github.com/JamesClonk/opengl/app"
-	gl "github.com/go-gl/gl"
+	"github.com/go-gl/gl"
 	glfw "github.com/go-gl/glfw3"
-	glh "github.com/go-gl/glh"
-	mathgl "github.com/go-gl/mathgl/mgl32"
+	"github.com/go-gl/glh"
+	mgl "github.com/go-gl/mathgl/mgl32"
 )
 
 var shader gl.Program
@@ -18,20 +18,20 @@ const vertexShaderSource = `
 		in vec2 position;
 		in vec4 color;
 
-		varying vec4 dstColor;
+		varying vec4 vertexColor;
 
 		void main()	{
-			dstColor = color;
+			vertexColor = color;
 			gl_Position = vec4(position, 0, 1);
 		}
 `
 
 const fragmentShaderSource = `
 	#version 130
-		varying vec4 dstColor;
+		varying vec4 vertexColor;
 
 		void main() {
-			gl_FragColor = dstColor;
+			gl_FragColor = vertexColor;
 		}
 `
 
@@ -40,8 +40,8 @@ type Triangle struct {
 }
 
 type Vertex struct {
-	Position mathgl.Vec2
-	Color    mathgl.Vec4
+	Position mgl.Vec2
+	Color    mgl.Vec4
 }
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 }
 
 func createTriangleShader(window *glfw.Window) {
-	if int(glh.Sizeof(gl.FLOAT))*2 != int(unsafe.Sizeof(mathgl.Vec2{})) {
+	if int(glh.Sizeof(gl.FLOAT))*2 != int(unsafe.Sizeof(mgl.Vec2{})) {
 		panic("wrong float type!")
 	} else if int(glh.Sizeof(gl.FLOAT))*6 != int(unsafe.Sizeof(Vertex{})) {
 		panic("wrong vertex size!")
@@ -63,16 +63,16 @@ func createTriangleShader(window *glfw.Window) {
 	triangle := Triangle{
 		[3]Vertex{
 			Vertex{
-				mathgl.Vec2{-0.5, -0.5},
-				mathgl.Vec4{1.0, 0.0, 0.0, 1.0},
+				mgl.Vec2{-0.5, -0.5},
+				mgl.Vec4{1.0, 0.0, 0.0, 1.0},
 			},
 			Vertex{
-				mathgl.Vec2{-0.5, 0.5},
-				mathgl.Vec4{0.0, 1.0, 0.0, 1.0},
+				mgl.Vec2{-0.5, 0.5},
+				mgl.Vec4{0.0, 1.0, 0.0, 1.0},
 			},
 			Vertex{
-				mathgl.Vec2{0.5, -0.5},
-				mathgl.Vec4{0.0, 0.0, 1.0, 1.0},
+				mgl.Vec2{0.5, -0.5},
+				mgl.Vec4{0.0, 0.0, 1.0, 1.0},
 			},
 		},
 	}
@@ -98,7 +98,7 @@ func createTriangleShader(window *glfw.Window) {
 	position.EnableArray()
 	color.EnableArray()
 	position.AttribPointer(2, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), nil)
-	color.AttribPointer(4, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), uintptr(unsafe.Pointer(&((triangle.Vertices[0]).Color))))
+	color.AttribPointer(4, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), unsafe.Sizeof(mgl.Vec2{}))
 
 	vertexArray.Unbind()
 	shader.Unuse()

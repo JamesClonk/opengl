@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "github.com/JamesClonk/opengl/app"
+	. "github.com/JamesClonk/opengl/_includes"
 	gl "github.com/go-gl/gl"
 	glfw "github.com/go-gl/glfw3"
 )

@@ -4,7 +4,6 @@ import (
 	"unsafe"
 
 	"github.com/go-gl/gl"
-	glfw "github.com/go-gl/glfw3"
 	"github.com/go-gl/glh"
 	mgl "github.com/go-gl/mathgl/mgl32"
 )
@@ -39,7 +38,7 @@ func init() {
 	}
 }
 
-func NewSimpleShader(window *glfw.Window, vertices *Vertices, vertexShaderSource, fragmentShaderSource string) *Shader {
+func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSource string) *Shader {
 	// create shader program
 	vertexShader := glh.Shader{gl.VERTEX_SHADER, vertexShaderSource}
 	fragmentShader := glh.Shader{gl.FRAGMENT_SHADER, fragmentShaderSource}

@@ -49,7 +49,7 @@ func main() {
 			mgl.Vec4{0.0, 0.0, 1.0, 1.0},
 		},
 	}
-	shader = NewSimpleShader(app.Window, &triangle, vertexShaderSource, fragmentShaderSource)
+	shader = NewSimpleShader(&triangle, vertexShaderSource, fragmentShaderSource)
 
 	app.Start()
 }

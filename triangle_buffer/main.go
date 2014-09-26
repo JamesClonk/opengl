@@ -7,9 +7,7 @@ import (
 	glh "github.com/go-gl/glh"
 )
 
-var triangle Triangle
 var shader gl.Program
-var vertexShader, fragmentShader glh.Shader
 var vertexArray gl.VertexArray
 
 // const vertexShaderSource = `
@@ -30,9 +28,9 @@ var vertexArray gl.VertexArray
 
 const vertexShaderSource = `
 	#version 120
-		attribute vec4 position;
+		attribute vec2 position;
 		void main() {
-			gl_Position = position;
+			gl_Position = vec4(position, 0, 1);
 		}
 `
 
@@ -51,17 +49,19 @@ func main() {
 	app := NewSimpleApp(640, 480, "Go GLFW3 Triangle Buffer Example", draw)
 	defer app.Destroy()
 
-	initOpenGL(app.Window)
+	createTriangleShader(app.Window)
 	app.Start()
 }
 
-func initOpenGL(window *glfw.Window) {
-	// set triangle vertices
-	triangle.Vertices = [6]float32{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5}
+func createTriangleShader(window *glfw.Window) {
+	// create triangle
+	triangle := Triangle{
+		[6]float32{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
+	}
 
 	// create shader
-	vertexShader = glh.Shader{gl.VERTEX_SHADER, vertexShaderSource}
-	fragmentShader = glh.Shader{gl.FRAGMENT_SHADER, fragmentShaderSource}
+	vertexShader := glh.Shader{gl.VERTEX_SHADER, vertexShaderSource}
+	fragmentShader := glh.Shader{gl.FRAGMENT_SHADER, fragmentShaderSource}
 	shader = glh.NewProgram(vertexShader, fragmentShader)
 	shader.Use()
 
@@ -77,9 +77,18 @@ func initOpenGL(window *glfw.Window) {
 	// enable vertex attributes
 	positionLocation := shader.GetAttribLocation("position")
 	positionLocation.EnableArray()
-	positionLocation.AttribPointer(2, gl.FLOAT, false, 0, nil)
+	positionLocation.AttribPointer(2, gl.FLOAT, false, int(glh.Sizeof(gl.FLOAT))*2, nil)
+
+	vertexArray.Unbind()
+	shader.Unuse()
 }
 
 func draw(window *glfw.Window) {
+	shader.Use()
+	vertexArray.Bind()
+
 	gl.DrawArrays(gl.TRIANGLES, 0, 3)
+
+	vertexArray.Unbind()
+	shader.Unuse()
 }

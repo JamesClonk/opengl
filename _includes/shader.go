@@ -65,10 +65,12 @@ func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSourc
 	position := shader.GetAttribLocation("position")
 	position.EnableArray()
 	position.AttribPointer(2, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), nil)
+	glh.OpenGLSentinel()
 
 	color := shader.GetAttribLocation("color")
 	color.EnableArray()
 	color.AttribPointer(4, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), unsafe.Sizeof(mgl.Vec2{}))
+	glh.OpenGLSentinel()
 
 	// uniform locations
 	ortho := shader.GetUniformLocation("ortho")

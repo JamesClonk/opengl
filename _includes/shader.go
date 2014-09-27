@@ -12,6 +12,9 @@ type Shader struct {
 	Program     gl.Program
 	VertexArray gl.VertexArray
 	Ortho       gl.UniformLocation
+	Model       gl.UniformLocation
+	View        gl.UniformLocation
+	Projection  gl.UniformLocation
 }
 
 type Vertex struct {
@@ -67,7 +70,11 @@ func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSourc
 	color.EnableArray()
 	color.AttribPointer(4, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), unsafe.Sizeof(mgl.Vec2{}))
 
+	// uniform locations
 	ortho := shader.GetUniformLocation("ortho")
+	model := shader.GetUniformLocation("model")
+	view := shader.GetUniformLocation("view")
+	projection := shader.GetUniformLocation("projection")
 	glh.OpenGLSentinel()
 
 	// unbind
@@ -75,5 +82,5 @@ func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSourc
 	shader.Unuse()
 	glh.OpenGLSentinel()
 
-	return &Shader{shader, vertexArray, ortho}
+	return &Shader{shader, vertexArray, ortho, model, view, projection}
 }

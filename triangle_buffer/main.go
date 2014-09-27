@@ -83,7 +83,7 @@ func createTriangleShader(window *glfw.Window) {
 	shader.Unuse()
 }
 
-func draw(window *glfw.Window) {
+func draw(app *App) {
 	shader.Use()
 	vertexArray.Bind()
 

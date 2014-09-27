@@ -4,7 +4,6 @@ import (
 	"log"
 
 	. "github.com/JamesClonk/opengl/_includes"
-	glfw "github.com/go-gl/glfw3"
 )
 
 func main() {
@@ -19,6 +18,6 @@ func main() {
 	log.Println("Goodbye Window..")
 }
 
-func draw(window *glfw.Window) {
+func draw(app *App) {
 	// nothing to draw here..
 }

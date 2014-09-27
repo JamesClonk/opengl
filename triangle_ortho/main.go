@@ -15,9 +15,11 @@ const vertexShaderSource = `
 
 		varying vec4 vertexColor;
 
+		uniform mat4 ortho;
+
 		void main()	{
 			vertexColor = color;
-			gl_Position = vec4(position, 0, 1);
+			gl_Position = ortho * vec4(position, 0, 1);
 		}
 `
 
@@ -31,7 +33,7 @@ const fragmentShaderSource = `
 `
 
 func main() {
-	app := NewSimpleApp(640, 480, "Go GLFW3 Triangle Color Buffer Example", draw)
+	app := NewSimpleApp(640, 480, "Go GLFW3 Triangle Color Buffer Ortho Example", draw)
 	defer app.Destroy()
 
 	triangle := Vertices{
@@ -55,6 +57,9 @@ func main() {
 
 func draw(app *App) {
 	shader.Use()
+
+	ortho := mgl.Ortho(-app.Ratio, app.Ratio, -1.0, 1.0, -1.0, 1.0)
+	shader.Ortho.UniformMatrix4fv(false, ortho)
 
 	gl.DrawArrays(gl.TRIANGLES, 0, 3)
 

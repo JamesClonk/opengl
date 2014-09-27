@@ -13,20 +13,21 @@ type App struct {
 	Window       *glfw.Window
 	Width        int
 	Height       int
+	Ratio        float32
 	Title        string
-	ViewportFunc func(*glfw.Window)
-	DrawFunc     func(*glfw.Window)
+	ViewportFunc func(*App)
+	DrawFunc     func(*App)
 	KeyFunc      func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey)
 	MouseFunc    func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey)
 	CursorFunc   func(*glfw.Window, float64, float64)
 	ErrorFunc    func(glfw.ErrorCode, string)
 }
 
-func NewSimpleApp(width, height int, title string, drawFunc func(*glfw.Window)) *App {
-	return NewApp(width, height, title, SetViewport, drawFunc, OnKeyDown, OnMouseDown, OnMouseMove, OnError)
+func NewSimpleApp(width, height int, title string, drawFunc func(*App)) *App {
+	return NewApp(width, height, title, UpdateViewport, drawFunc, OnKeyDown, OnMouseDown, OnMouseMove, OnError)
 }
 
-func NewApp(width, height int, title string, viewportFunc func(window *glfw.Window), drawFunc func(*glfw.Window), keyFunc func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey), mouseFunc func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey), cursorFunc func(*glfw.Window, float64, float64), errorFunc func(glfw.ErrorCode, string)) *App {
+func NewApp(width, height int, title string, viewportFunc func(*App), drawFunc func(*App), keyFunc func(*glfw.Window, glfw.Key, int, glfw.Action, glfw.ModifierKey), mouseFunc func(*glfw.Window, glfw.MouseButton, glfw.Action, glfw.ModifierKey), cursorFunc func(*glfw.Window, float64, float64), errorFunc func(glfw.ErrorCode, string)) *App {
 	runtime.LockOSThread()
 
 	if !glfw.Init() {
@@ -61,6 +62,7 @@ func NewApp(width, height int, title string, viewportFunc func(window *glfw.Wind
 		Window:       window,
 		Width:        width,
 		Height:       height,
+		Ratio:        float32(width) / float32(height),
 		Title:        title,
 		ViewportFunc: viewportFunc,
 		DrawFunc:     drawFunc,
@@ -70,14 +72,14 @@ func NewApp(width, height int, title string, viewportFunc func(window *glfw.Wind
 	}
 }
 
-func (a App) Start() {
+func (a *App) Start() {
 	for !a.Window.ShouldClose() {
-		a.ViewportFunc(a.Window)
+		a.ViewportFunc(a)
 
 		gl.ClearColor(0.1, 0.1, 0.1, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-		a.DrawFunc(a.Window)
+		a.DrawFunc(a)
 		glh.OpenGLSentinel()
 
 		a.Window.SwapBuffers()
@@ -85,15 +87,24 @@ func (a App) Start() {
 	}
 }
 
-func (a App) Destroy() {
+func (a *App) Close() {
+	a.Window.SetShouldClose(true)
+}
+
+func (a *App) Destroy() {
 	glh.OpenGLSentinel()
 	a.Window.Destroy()
 	glfw.Terminate()
 }
 
-func SetViewport(window *glfw.Window) {
-	w, h := window.GetFramebufferSize()
+func UpdateViewport(a *App) {
+	w, h := a.Window.GetFramebufferSize()
+
 	gl.Viewport(0, 0, w, h)
+
+	a.Width = w
+	a.Height = h
+	a.Ratio = float32(w) / float32(h)
 }
 
 func OnKeyDown(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mod glfw.ModifierKey) {

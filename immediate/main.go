@@ -3,7 +3,6 @@ package main
 import (
 	. "github.com/JamesClonk/opengl/_includes"
 	gl "github.com/go-gl/gl"
-	glfw "github.com/go-gl/glfw3"
 )
 
 func main() {
@@ -13,7 +12,7 @@ func main() {
 	app.Start()
 }
 
-func draw(window *glfw.Window) {
+func draw(app *App) {
 	gl.Begin(gl.TRIANGLES)
 	gl.Color3f(1, 0, 0)
 	gl.Vertex3f(-1, 0, 0)

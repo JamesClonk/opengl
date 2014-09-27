@@ -5,7 +5,6 @@ import (
 
 	. "github.com/JamesClonk/opengl/_includes"
 	"github.com/go-gl/gl"
-	glfw "github.com/go-gl/glfw3"
 )
 
 var counter float64 = 0.0
@@ -28,14 +27,13 @@ func drawTriangle() {
 	gl.End()
 }
 
-func draw(window *glfw.Window) {
+func draw(app *App) {
 	counter += 0.01
-	width, height := window.GetFramebufferSize()
 
 	// transform orthogonal projection matrix
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	gl.Ortho(-float64(width)/float64(height), float64(width)/float64(height), -1, 2, -1.0, 1.0)
+	gl.Ortho(-float64(app.Ratio), float64(app.Ratio), -1, 2, -1.0, 1.0)
 
 	// transform modelview matrix
 	gl.MatrixMode(gl.MODELVIEW)

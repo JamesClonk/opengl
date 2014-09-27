@@ -11,6 +11,7 @@ import (
 type Shader struct {
 	Program     gl.Program
 	VertexArray gl.VertexArray
+	Ortho       gl.UniformLocation
 }
 
 type Vertex struct {
@@ -59,11 +60,14 @@ func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSourc
 
 	// enable vertex attributes
 	position := shader.GetAttribLocation("position")
-	color := shader.GetAttribLocation("color")
 	position.EnableArray()
-	color.EnableArray()
 	position.AttribPointer(2, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), nil)
+
+	color := shader.GetAttribLocation("color")
+	color.EnableArray()
 	color.AttribPointer(4, gl.FLOAT, false, int(unsafe.Sizeof(Vertex{})), unsafe.Sizeof(mgl.Vec2{}))
+
+	ortho := shader.GetUniformLocation("ortho")
 	glh.OpenGLSentinel()
 
 	// unbind
@@ -71,5 +75,5 @@ func NewSimpleShader(vertices *Vertices, vertexShaderSource, fragmentShaderSourc
 	shader.Unuse()
 	glh.OpenGLSentinel()
 
-	return &Shader{shader, vertexArray}
+	return &Shader{shader, vertexArray, ortho}
 }

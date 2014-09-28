@@ -80,8 +80,8 @@ func draw(app *App) {
 	length := float32(10)
 	total := length * length * length
 	for i := float32(1); i <= length; i++ {
-		for j := float32(1); j < length; j++ {
-			for k := float32(1); k < length; k++ {
+		for j := float32(1); j <= length; j++ {
+			for k := float32(1); k <= length; k++ {
 				index := i*length*length + j*length + k
 
 				// create transformation matrices

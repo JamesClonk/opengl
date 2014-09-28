@@ -13,7 +13,7 @@ var time float64
 
 const vertexShaderSource = `
 	#version 130
-		in vec2 position;
+		in vec4 position;
 		in vec4 color;
 
 		varying vec4 vertexColor;
@@ -24,7 +24,7 @@ const vertexShaderSource = `
 
 		void main()	{
 			vertexColor = color;
-			gl_Position = projection * view * model * vec4(position, 0, 1);
+			gl_Position = projection * view * model * position;
 		}
 `
 
@@ -43,16 +43,16 @@ func main() {
 
 	triangle := Vertices{
 		Vertex{
-			mgl.Vec2{-0.5, -0.5},
-			mgl.Vec4{1.0, 0.0, 0.0, 1.0},
+			Position: mgl.Vec4{-0.5, -0.5, 0, 1},
+			Color:    mgl.Vec4{1, 0, 0, 1},
 		},
 		Vertex{
-			mgl.Vec2{-0.5, 0.5},
-			mgl.Vec4{0.0, 1.0, 0.0, 1.0},
+			Position: mgl.Vec4{-0.5, 0.5, 0, 1},
+			Color:    mgl.Vec4{0, 1, 0, 1},
 		},
 		Vertex{
-			mgl.Vec2{0.5, -0.5},
-			mgl.Vec4{0.0, 0.0, 1.0, 1.0},
+			Position: mgl.Vec4{0.5, -0.5, 0, 1},
+			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
 	}
 	shader = NewSimpleShader(&triangle, vertexShaderSource, fragmentShaderSource)

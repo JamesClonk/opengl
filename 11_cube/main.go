@@ -38,41 +38,41 @@ const fragmentShaderSource = `
 `
 
 func main() {
-	app := NewSimpleApp(640, 480, "Go GLFW3 Model View Example", draw)
+	app := NewSimpleApp(640, 480, "Go GLFW3 Cube Example", draw)
 	defer app.Destroy()
 
 	cube := Vertices{
 		Vertex{
-			Position: mgl.Vec4{0.5, -0.5, 0.5, 1},
-			Color:    mgl.Vec4{1, 0, 0, 1},
-		},
-		Vertex{
-			Position: mgl.Vec4{0.5, 0.5, 0.5, 1},
-			Color:    mgl.Vec4{0, 1, 0, 1},
-		},
-		Vertex{
-			Position: mgl.Vec4{-0.5, 0.5, 0.5, 1},
+			Position: mgl.Vec4{1, -1, 1, 1},
 			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
 		Vertex{
-			Position: mgl.Vec4{-0.5, -0.5, 0.5, 1},
-			Color:    mgl.Vec4{1, 0, 0, 1},
-		},
-		Vertex{
-			Position: mgl.Vec4{0.5, -0.5, -0.5, 1},
+			Position: mgl.Vec4{1, 1, 1, 1},
 			Color:    mgl.Vec4{0, 1, 0, 1},
 		},
 		Vertex{
-			Position: mgl.Vec4{0.5, 0.5, -0.5, 1},
+			Position: mgl.Vec4{-1, 1, 1, 1},
 			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
 		Vertex{
-			Position: mgl.Vec4{-0.5, 0.5, -0.5, 1},
+			Position: mgl.Vec4{-1, -1, 1, 1},
 			Color:    mgl.Vec4{1, 0, 0, 1},
 		},
 		Vertex{
-			Position: mgl.Vec4{-0.5, -0.5, -0.5, 1},
+			Position: mgl.Vec4{1, -1, -1, 1},
 			Color:    mgl.Vec4{0, 1, 0, 1},
+		},
+		Vertex{
+			Position: mgl.Vec4{1, 1, -1, 1},
+			Color:    mgl.Vec4{0, 0, 1, 1},
+		},
+		Vertex{
+			Position: mgl.Vec4{-1, 1, -1, 1},
+			Color:    mgl.Vec4{1, 0, 0, 1},
+		},
+		Vertex{
+			Position: mgl.Vec4{-1, -1, -1, 1},
+			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
 	}
 	/*

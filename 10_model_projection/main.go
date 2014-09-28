@@ -38,7 +38,7 @@ const fragmentShaderSource = `
 `
 
 func main() {
-	app := NewSimpleApp(640, 480, "Go GLFW3 Model View Example", draw)
+	app := NewSimpleApp(640, 480, "Go GLFW3 Model Projection Example", draw)
 	defer app.Destroy()
 
 	triangle := Vertices{

@@ -44,7 +44,7 @@ func main() {
 	cube := Vertices{
 		Vertex{
 			Position: mgl.Vec4{1, -1, 1, 1},
-			Color:    mgl.Vec4{0, 0, 1, 1},
+			Color:    mgl.Vec4{1, 1, 0, 1},
 		},
 		Vertex{
 			Position: mgl.Vec4{1, 1, 1, 1},
@@ -52,7 +52,7 @@ func main() {
 		},
 		Vertex{
 			Position: mgl.Vec4{-1, 1, 1, 1},
-			Color:    mgl.Vec4{0, 0, 1, 1},
+			Color:    mgl.Vec4{1, 1, 0, 1},
 		},
 		Vertex{
 			Position: mgl.Vec4{-1, -1, 1, 1},

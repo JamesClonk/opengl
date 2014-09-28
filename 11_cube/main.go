@@ -88,7 +88,7 @@ func main() {
 	   //3--------------/0
 	*/
 
-	indices := []byte{
+	indices := []int32{
 		0, 1, 2, 3, // front
 		7, 6, 5, 4, // back
 		3, 2, 6, 7, // left
@@ -122,7 +122,7 @@ func draw(app *App) {
 	model := mgl.HomogRotate3D(float32(time), mgl.Vec3{0, 1, 0})
 	shader.Model.UniformMatrix4fv(false, model)
 
-	gl.DrawElements(gl.QUADS, 24, gl.UNSIGNED_BYTE, nil)
+	gl.DrawElements(gl.QUADS, 24, gl.UNSIGNED_INT, nil)
 
 	shader.Unuse()
 }

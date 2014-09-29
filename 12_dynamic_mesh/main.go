@@ -11,7 +11,7 @@ import (
 
 var shader *Shader
 var time float64
-var vertices Vertices
+var vertices ColorVertices
 var indices []int32
 
 const w = float64(10)
@@ -54,7 +54,7 @@ func main() {
 		for j := float64(0); j < h; j++ {
 			tv := -1.0 + 2*j/h
 
-			vertex := Vertex{
+			vertex := ColorVertex{
 				Position: mgl.Vec4{float32(tu), float32(tv), 0, 1},
 				Color:    mgl.Vec4{float32(math.Abs(tu)), 1, float32(math.Abs(tv)), 1},
 			}
@@ -109,7 +109,7 @@ func draw(app *App) {
 
 	// bind buffer before substituting data on it
 	shader.VertexBuffer.Bind(gl.ARRAY_BUFFER)
-	gl.BufferSubData(gl.ARRAY_BUFFER, 0, len(vertices)*int(unsafe.Sizeof(Vertex{})), vertices)
+	gl.BufferSubData(gl.ARRAY_BUFFER, 0, len(vertices)*int(unsafe.Sizeof(ColorVertex{})), vertices)
 	gl.DrawElements(gl.LINE_STRIP, len(indices), gl.UNSIGNED_INT, nil)
 
 	for i := float64(0); i < w; i++ {
@@ -121,7 +121,7 @@ func draw(app *App) {
 		}
 	}
 
-	gl.BufferSubData(gl.ARRAY_BUFFER, 0, len(vertices)*int(unsafe.Sizeof(Vertex{})), vertices)
+	gl.BufferSubData(gl.ARRAY_BUFFER, 0, len(vertices)*int(unsafe.Sizeof(ColorVertex{})), vertices)
 	gl.DrawElements(gl.TRIANGLE_STRIP, len(indices), gl.UNSIGNED_INT, nil)
 
 	shader.Unuse()

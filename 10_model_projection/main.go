@@ -41,21 +41,21 @@ func main() {
 	app := NewSimpleApp(640, 480, "Go GLFW3 Model Projection Example", draw)
 	defer app.Destroy()
 
-	triangle := Vertices{
-		Vertex{
+	triangle := ColorVertices{
+		ColorVertex{
 			Position: mgl.Vec4{-0.5, -0.5, 0, 1},
 			Color:    mgl.Vec4{1, 0, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{-0.5, 0.5, 0, 1},
 			Color:    mgl.Vec4{0, 1, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{0.5, -0.5, 0, 1},
 			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
 	}
-	shader = NewSimpleShader(&triangle, vertexShaderSource, fragmentShaderSource)
+	shader = NewColoredShader(&triangle, vertexShaderSource, fragmentShaderSource)
 
 	app.Start()
 }

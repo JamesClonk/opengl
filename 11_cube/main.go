@@ -41,36 +41,36 @@ func main() {
 	app := NewSimpleApp(640, 480, "Go GLFW3 Cube Example", draw)
 	defer app.Destroy()
 
-	cube := Vertices{
-		Vertex{
+	cube := ColorVertices{
+		ColorVertex{
 			Position: mgl.Vec4{1, -1, 1, 1},
 			Color:    mgl.Vec4{1, 1, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{1, 1, 1, 1},
 			Color:    mgl.Vec4{0, 1, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{-1, 1, 1, 1},
 			Color:    mgl.Vec4{1, 1, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{-1, -1, 1, 1},
 			Color:    mgl.Vec4{1, 0, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{1, -1, -1, 1},
 			Color:    mgl.Vec4{0, 1, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{1, 1, -1, 1},
 			Color:    mgl.Vec4{0, 0, 1, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{-1, 1, -1, 1},
 			Color:    mgl.Vec4{1, 0, 0, 1},
 		},
-		Vertex{
+		ColorVertex{
 			Position: mgl.Vec4{-1, -1, -1, 1},
 			Color:    mgl.Vec4{0, 0, 1, 1},
 		},

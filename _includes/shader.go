@@ -1,6 +1,7 @@
 package _includes
 
 import (
+	"image"
 	"unsafe"
 
 	"github.com/go-gl/gl"
@@ -103,10 +104,24 @@ func NewTexturedShader(vertices *TextureVertices, textureWidth, textureHeight in
 	shader.EnableTextureVertexAttributes()
 	shader.SetUniformLocations()
 
-	// shader.VertexArray.Unbind()
-	// shader.VertexBuffer.Unbind(gl.ARRAY_BUFFER)
-
 	shader.SetTexture(textureWidth, textureHeight, data)
+
+	shader.Unuse()
+	glh.OpenGLSentinel()
+
+	return shader
+}
+
+func NewImageTexturedShader(vertices *TextureVertices, texture *image.NRGBA, vertexShaderSource, fragmentShaderSource string) *Shader {
+	shader := NewShader(vertexShaderSource, fragmentShaderSource)
+
+	shader.SetVertexArray()
+	shader.SetVertexArrayBuffer(*vertices, gl.STATIC_DRAW)
+
+	shader.EnableTextureVertexAttributes()
+	shader.SetUniformLocations()
+
+	shader.SetImageTexture(texture)
 
 	shader.Unuse()
 	glh.OpenGLSentinel()
@@ -194,6 +209,21 @@ func (shader *Shader) SetTexture(width, height int, data *[]mgl.Vec4) {
 	gl.GenerateMipmap(gl.TEXTURE_2D)
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+	glh.OpenGLSentinel()
+
+	shader.Texture = texture
+}
+
+func (shader *Shader) SetImageTexture(tex *image.NRGBA) {
+	// create texture
+	texture := gl.GenTexture()
+	texture.Bind(gl.TEXTURE_2D)
+	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, tex.Bounds().Dx(), tex.Bounds().Dy(), 0, gl.RGBA, gl.UNSIGNED_BYTE, nil)
+	gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, tex.Bounds().Dx(), tex.Bounds().Dy(), gl.RGBA, gl.UNSIGNED_BYTE, tex.Pix)
+
+	gl.GenerateMipmap(gl.TEXTURE_2D)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 	glh.OpenGLSentinel()
 
 	shader.Texture = texture

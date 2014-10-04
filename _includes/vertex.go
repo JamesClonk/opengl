@@ -22,11 +22,19 @@ type TextureVertex struct {
 	TextureCoordinate mgl.Vec2
 }
 
+type NormalVertex struct {
+	Position mgl.Vec4
+	Color    mgl.Vec4
+	Normal   mgl.Vec3
+}
+
 type Vertices []Vertex
 
 type ColorVertices []ColorVertex
 
 type TextureVertices []TextureVertex
+
+type NormalVertices []NormalVertex
 
 func init() {
 	if int(glh.Sizeof(gl.FLOAT))*4 != int(unsafe.Sizeof(Vertex{})) {
@@ -35,5 +43,7 @@ func init() {
 		panic("wrong color vertex size!")
 	} else if int(glh.Sizeof(gl.FLOAT))*6 != int(unsafe.Sizeof(TextureVertex{})) {
 		panic("wrong texture vertex size!")
+	} else if int(glh.Sizeof(gl.FLOAT))*11 != int(unsafe.Sizeof(NormalVertex{})) {
+		panic("wrong normal vertex size!")
 	}
 }

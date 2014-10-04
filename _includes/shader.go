@@ -19,6 +19,7 @@ type Shader struct {
 	Model         gl.UniformLocation
 	View          gl.UniformLocation
 	Projection    gl.UniformLocation
+	Normal        gl.UniformLocation
 }
 
 func init() {
@@ -129,6 +130,40 @@ func NewImageTexturedShader(vertices *TextureVertices, texture *image.NRGBA, ver
 	return shader
 }
 
+func NewNormalShader(vertices *NormalVertices, indices []int32, vertexShaderSource, fragmentShaderSource string) *Shader {
+	shader := NewShader(vertexShaderSource, fragmentShaderSource)
+
+	shader.SetVertexArray()
+	shader.SetVertexArrayBuffer(*vertices, gl.STATIC_DRAW)
+	shader.SetElementArrayBuffer(indices, gl.STATIC_DRAW)
+
+	shader.EnableNormalVertexAttributes()
+	shader.SetUniformLocations()
+
+	shader.Unuse()
+	glh.OpenGLSentinel()
+
+	return shader
+}
+
+func NewNormalTexturedShader(vertices *NormalTextureVertices, indices []int32, texture *image.NRGBA, vertexShaderSource, fragmentShaderSource string) *Shader {
+	shader := NewShader(vertexShaderSource, fragmentShaderSource)
+
+	shader.SetVertexArray()
+	shader.SetVertexArrayBuffer(*vertices, gl.STATIC_DRAW)
+	shader.SetElementArrayBuffer(indices, gl.STATIC_DRAW)
+
+	shader.EnableNormalTextureVertexAttributes()
+	shader.SetUniformLocations()
+
+	shader.SetImageTexture(texture)
+
+	shader.Unuse()
+	glh.OpenGLSentinel()
+
+	return shader
+}
+
 func NewShader(vertexShaderSource, fragmentShaderSource string) *Shader {
 	// create shader program
 	vertexShader := glh.Shader{gl.VERTEX_SHADER, vertexShaderSource}
@@ -176,6 +211,10 @@ func (shader *Shader) SetVertexArrayBuffer(data interface{}, mode gl.GLenum) {
 		size = len(d) * int(unsafe.Sizeof(ColorVertex{}))
 	case TextureVertices:
 		size = len(d) * int(unsafe.Sizeof(TextureVertex{}))
+	case NormalVertices:
+		size = len(d) * int(unsafe.Sizeof(NormalVertex{}))
+	case NormalTextureVertices:
+		size = len(d) * int(unsafe.Sizeof(NormalTextureVertex{}))
 	default:
 		panic("unknown vertex type provided!")
 	}
@@ -230,9 +269,9 @@ func (shader *Shader) SetImageTexture(tex *image.NRGBA) {
 }
 
 func (shader *Shader) EnableVertexAttribute(name string, length uint, size int, offset interface{}) {
-	position := shader.Program.GetAttribLocation(name)
-	position.EnableArray()
-	position.AttribPointer(length, gl.FLOAT, false, size, offset)
+	attrib := shader.Program.GetAttribLocation(name)
+	attrib.EnableArray()
+	attrib.AttribPointer(length, gl.FLOAT, false, size, offset)
 	glh.OpenGLSentinel()
 }
 
@@ -250,10 +289,24 @@ func (shader *Shader) EnableTextureVertexAttributes() {
 	shader.EnableVertexAttribute("textureCoordinate", 2, int(unsafe.Sizeof(TextureVertex{})), unsafe.Sizeof(mgl.Vec4{}))
 }
 
+func (shader *Shader) EnableNormalVertexAttributes() {
+	shader.EnableVertexAttribute("position", 4, int(unsafe.Sizeof(NormalVertex{})), nil)
+	shader.EnableVertexAttribute("color", 4, int(unsafe.Sizeof(NormalVertex{})), unsafe.Sizeof(mgl.Vec4{}))
+	shader.EnableVertexAttribute("norm", 3, int(unsafe.Sizeof(NormalVertex{})), uintptr(int(unsafe.Sizeof(mgl.Vec4{}))*2))
+}
+
+func (shader *Shader) EnableNormalTextureVertexAttributes() {
+	shader.EnableVertexAttribute("position", 4, int(unsafe.Sizeof(NormalTextureVertex{})), nil)
+	shader.EnableVertexAttribute("color", 4, int(unsafe.Sizeof(NormalTextureVertex{})), unsafe.Sizeof(mgl.Vec4{}))
+	shader.EnableVertexAttribute("norm", 3, int(unsafe.Sizeof(NormalTextureVertex{})), uintptr(int(unsafe.Sizeof(mgl.Vec4{}))*2))
+	shader.EnableVertexAttribute("textureCoordinate", 2, int(unsafe.Sizeof(NormalTextureVertex{})), uintptr(int(unsafe.Sizeof(mgl.Vec4{}))*2+int(unsafe.Sizeof(mgl.Vec3{}))))
+}
+
 func (shader *Shader) SetUniformLocations() {
 	shader.Ortho = shader.Program.GetUniformLocation("ortho")
 	shader.Model = shader.Program.GetUniformLocation("model")
 	shader.View = shader.Program.GetUniformLocation("view")
 	shader.Projection = shader.Program.GetUniformLocation("projection")
+	shader.Normal = shader.Program.GetUniformLocation("normal")
 	glh.OpenGLSentinel()
 }

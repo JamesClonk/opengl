@@ -15,19 +15,19 @@ const vertexShaderSource = `
 	#version 130
 		in vec4 position;
 		in vec4 color;
-		in vec3 normal;
+		in vec3 norm;
 
 		varying vec4 vertexColor;
 
 		uniform mat4 model;
 		uniform mat4 view;
 		uniform mat4 projection;
-		uniform mat3 normalMatrix;
+		uniform mat3 normal;
 
 		vec4 doColor() {
-			vec3 norm  = normalize(normalMatrix * normalize(normal));
+			vec3 normalized  = normalize(normal * normalize(norm));
 			vec3 light = normalize(vec3(1.0, 1.0, 1.0));
-			float df = max(dot(norm, light), 0.0);
+			float df = max(dot(normalized, light), 0.0);
 			return vec4((color * df).xyz, 1.0);
 		}
 
@@ -114,7 +114,7 @@ func main() {
 		4, 0, 3, 7, // bottom
 	}
 
-	shader = NewElementShader(&cube, indices, vertexShaderSource, fragmentShaderSource)
+	shader = NewNormalShader(&cube, indices, vertexShaderSource, fragmentShaderSource)
 
 	app.Start()
 }
@@ -138,6 +138,10 @@ func draw(app *App) {
 	// transformation matrix for rotation
 	model := mgl.HomogRotate3D(float32(time), mgl.Vec3{0, 1, 0})
 	shader.Model.UniformMatrix4fv(false, model)
+
+	// calculate normal matrix and send to shader
+	normal := view.Mul4(model).Mat3().Inv().Transpose()
+	shader.Normal.UniformMatrix3fv(false, normal)
 
 	gl.DrawElements(gl.QUADS, 24, gl.UNSIGNED_INT, nil)
 
